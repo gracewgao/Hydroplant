@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FrameLayout
+    tools:context=".MainActivity"
+    android:id="@+id/screen"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--Background image-->
+    <ImageView
+        android:id="@+id/bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/plant_bg"
+        android:scaleType="centerCrop"/>
+    <!--Images of clouds-->
+    <ImageView
+        android:id="@+id/cloud1"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/cloud1"/>
+    <ImageView
+        android:id="@+id/cloud2"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/cloud2"/>
+    <ImageView
+        android:id="@+id/cloud3"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="48dp"
+        android:src="@drawable/cloud3"/>
+
+    <!--Layout containing game elements-->
+    <FrameLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/gameFrame"
+        android:visibility="invisible"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal">
+        <!--Image of plant-->
+        <ImageView
+            android:layout_height="100dp"
+            android:layout_width="55dp"
+            android:id="@+id/plant"
+            android:layout_gravity="bottom"
+            android:src="@drawable/alive_plant"/>
+        <!--Image of acid raindrop-->
+        <ImageView
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            android:id="@+id/acid"
+            android:src="@drawable/acid"/>
+        <!--Image of regular raindrop-->
+        <ImageView
+            android:layout_height="24dp"
+            android:layout_width="24dp"
+            android:id="@+id/rain"
+            android:src="@drawable/raindrop"/>
+        <!--Image of heart-->
+        <ImageView
+            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:id="@+id/heart"
+            android:src="@drawable/heart"/>
+    </FrameLayout>
+
+    <!--Shows game score-->
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+        android:paddingTop="48dp"
+        android:textStyle="bold"
+        android:textSize="36sp"
+        android:text="0"
+        android:visibility="gone"
+        android:id="@+id/scoreLabel"/>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="160dp">
+        <!--Pause button-->
+        <android.support.design.widget.FloatingActionButton
+            style="@style/ButtonTheme"
+            android:id="@+id/pauseButton"
+            android:backgroundTint="@android:color/white"
+            android:tint="@color/colorAccent"
+            android:onClick="pauseGame"
+            app:borderWidth="0dp"
+            app:srcCompat="@drawable/ic_pause" />
+    </FrameLayout>
+
+    <!--Layout when game is paused-->
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="invisible"
+        android:background="#CCFFFFFF"
+        android:id="@+id/pauseLayout"
+        android:layout_gravity="center">
+        <!--Layout components-->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+            <!--Displays "paused" text-->
+            <TextView
+                android:id="@+id/pauseText"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:text="paused" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/pauseText"
+                android:layout_marginTop="32dp"
+                >
+                <!--Play button-->
+                <android.support.design.widget.FloatingActionButton
+                    style="@style/ButtonTheme"
+                    app:srcCompat="@drawable/ic_play_arrow"
+                    android:onClick="resumeGame"/>
+                <!--Exit button-->
+                <android.support.design.widget.FloatingActionButton
+                    style="@style/ButtonTheme"
+                    android:onClick="quitGame"
+                    app:srcCompat="@drawable/ic_close" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <!--Layout at the beginning/end of game-->
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:id="@+id/startLayout"
+        android:layout_gravity="center">
+        <!--Game title-->
+        <TextView
+            android:id="@+id/titleLabel"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:text="hydroplant" />
+        <!--Displays high score-->
+        <TextView
+            android:id="@+id/highScoreLabel"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/titleLabel"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:text="best score: "
+            android:layout_marginTop="16dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/highScoreLabel"
+            android:layout_marginTop="32dp"
+            >
+            <!--Play button-->
+            <android.support.design.widget.FloatingActionButton
+                style="@style/ButtonTheme"
+                android:id="@+id/playButton"
+                android:onClick="startGame"
+                app:srcCompat="@drawable/ic_play_arrow" />
+            <!--Quit button-->
+            <android.support.design.widget.FloatingActionButton
+                style="@style/ButtonTheme"
+                android:onClick="quitGame"
+                app:srcCompat="@drawable/ic_close" />
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

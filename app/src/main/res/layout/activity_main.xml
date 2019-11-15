@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!--Background image-->
+    <ImageView
+        android:id="@+id/skyBg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/sky_bg"
+        android:scaleType="centerCrop"/>
+    <!--Images of clouds-->
+    <ImageView
+        android:id="@+id/cloud1"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/cloud1"/>
+    <ImageView
+        android:id="@+id/cloud2"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/cloud2"/>
+    <ImageView
+        android:id="@+id/cloud3"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="48dp"
+        android:src="@drawable/cloud3"/>
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <android.support.design.widget.FloatingActionButton
+            style="@style/ButtonTheme"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:backgroundTint="@android:color/white"
+            android:tint="@color/colorAccent"
+            android:onClick="game"
+            app:borderWidth="0dp"
+            app:srcCompat="@drawable/game_ic" />
+
+        <!--Button for adding water-->
+        <android.support.design.widget.FloatingActionButton
+            style="@style/ButtonTheme"
+            android:id="@+id/moreButton"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="more"
+            app:srcCompat="@drawable/ic_add" />
+
+        <!--Button for subtracting water-->
+        <android.support.design.widget.FloatingActionButton
+            style="@style/ButtonTheme"
+            android:id="@+id/lessButton"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="less"
+            app:srcCompat="@drawable/ic_action_minus" />
+
+        <!--Puddle image that becomes visible when the user over waters-->
+        <ImageView
+            android:id="@+id/puddleImage"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/plantImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="344dp"
+            android:src="@drawable/puddle"/>
+
+        <!--Plant image-->
+        <ImageView
+            android:id="@+id/plantImage"
+            android:layout_width="200dp"
+            android:layout_height="362dp"
+            android:layout_above="@+id/editWater"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="48dp"
+            android:src="@drawable/plant1"/>
+
+        <!--Puddle image that becomes visible when the user over waters-->
+        <TextView
+            android:id="@+id/plantName"
+            android:text="grace"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:fontFamily="casual"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/plantImage"
+            android:textSize="14sp"
+            android:textColor="#A67B4A"
+            android:background="@null"
+            android:padding="8dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="280dp" />
+
+        <!--Textbox to display and edit water amount-->
+        <EditText
+            android:id="@+id/editWater"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/waterLabel"
+            android:textSize="84sp"
+            android:background="@null"
+            android:maxLines="1"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:layout_width="wrap_content"
+            android:minWidth="16dp"
+            android:layout_height="wrap_content" />
+
+        <!--Text underneath water amount-->
+        <TextView
+            android:id="@+id/waterLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="96dp"
+            android:textSize="24sp"
+            android:text="mL of water" />
+
+    </RelativeLayout>
+</FrameLayout>
