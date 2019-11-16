@@ -3,6 +3,8 @@ package gracegao.hydroplant;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -181,6 +184,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Retrieves amount of water from storage
+        settings = getSharedPreferences("HYDROPLANT", Context.MODE_PRIVATE);
+        water = settings.getInt("WATER", 0);
+        changeWater(water);
+    }
+
     public void changeName(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("name your plant!")
@@ -188,10 +200,11 @@ public class MainActivity extends AppCompatActivity {
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setSingleLine(true);
+        input.setText(name);
         FrameLayout container = new FrameLayout(this);
         FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = getResources().getDimensionPixelSize(R.dimen.layout_margin);
-        params.rightMargin = getResources().getDimensionPixelSize(R.dimen.layout_margin);
+        params.leftMargin = getResources().getDimensionPixelSize(R.dimen.alert_margin);
+        params.rightMargin = getResources().getDimensionPixelSize(R.dimen.alert_margin);
         input.setLayoutParams(params);
         container.addView(input);
         builder.setView(container);
@@ -268,6 +281,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("WATER", amount);
         editor.commit();
+
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        PlantWidget widget = new PlantWidget();
+        widget.updateWidget(this, appWidgetManager, new ComponentName(this, PlantWidget.class));
     }
 
     // Method called when user clicks the more button

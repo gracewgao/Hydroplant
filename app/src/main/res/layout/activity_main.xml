@@ -92,15 +92,15 @@
         <!--Puddle image that becomes visible when the user over waters-->
         <TextView
             android:id="@+id/plantName"
-            android:text="grace"
+            android:text="hydroplant"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:fontFamily="casual"
+            android:fontFamily="sans-serif-smallcaps"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/plantImage"
             android:textSize="14sp"
-            android:textColor="#A67B4A"
+            android:textColor="#715432"
             android:background="@null"
             android:padding="8dp"
             android:layout_centerHorizontal="true"
@@ -109,6 +109,8 @@
         <!--Textbox to display and edit water amount-->
         <EditText
             android:id="@+id/editWater"
+            android:fontFamily="sans-serif-smallcaps"
+            android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:layout_above="@+id/waterLabel"
             android:textSize="84sp"

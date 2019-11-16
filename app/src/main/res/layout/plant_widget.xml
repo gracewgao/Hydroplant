@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@null"
+    android:padding="@dimen/widget_margin">
+
+    <ImageView
+        android:id="@+id/plantWidgetImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/widget" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignTop="@id/plantWidgetImage">
+        <!--Button for subtracting water-->
+        <ImageButton
+            android:id="@+id/minusWidget"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@null"
+            />
+        <!--Button for adding water-->
+        <ImageButton
+            android:id="@+id/plusWidget"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@null"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/waterLabelWidget"
+        android:textColor="#715432"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-smallcaps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/descriptionTextWidget"
+        android:includeFontPadding="false"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/descriptionTextWidget"
+        android:text="mL today"
+        android:textColor="#715432"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/plantWidgetImage"
+        android:layout_marginBottom="24dp"
+        android:textSize="12sp" />
+
+</RelativeLayout>
