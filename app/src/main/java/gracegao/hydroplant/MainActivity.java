@@ -29,6 +29,9 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//import com.getkeepsafe.taptargetview.TapTarget;
+//import com.getkeepsafe.taptargetview.TapTargetSequence;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -121,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         name = settings.getString("NAME", "");
         if (name.equals("")){
             changeName();
+//            tutorial();
         } else {
             plantTv.setText(name);
         }
@@ -228,6 +232,32 @@ public class MainActivity extends AppCompatActivity {
         });
         builder.show();
     }
+
+//    private void tutorial(){
+//        new TapTargetSequence(this)
+//                .targets(
+//                        TapTarget.forView(findViewById(R.id.moreButton), "Edit water", "Tap to add 250mL of water"),
+//                        TapTarget.forView(findViewById(R.id.lessButton), "Edit water", "Tap to subtract 250mL of water"),
+//                        TapTarget.forView(findViewById(R.id.waterLabel), "Edit water", "...or you can set a custom amount"))
+//                .listener(new TapTargetSequence.Listener() {
+//                    // This listener will tell us when interesting(tm) events happen in regards
+//                    // to the sequence
+//                    @Override
+//                    public void onSequenceFinish() {
+//                        // Yay
+//                    }
+//
+//                    @Override
+//                    public void onSequenceStep(TapTarget lastTarget, boolean b) {
+//                        // Perfom action for the current target
+//                    }
+//
+//                    @Override
+//                    public void onSequenceCanceled(TapTarget lastTarget) {
+//                        // Boo
+//                    }
+//                });
+//    }
 
     // Method when user changes amount of water consumed
     public void changeWater(int amount){
