@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "your plant is healthy & happy", Toast.LENGTH_LONG).show();
         } else if (amount < 7000) {
             state = 6;
-            Toast.makeText(getApplicationContext(), "be careful not to over water!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "be careful not to overwater!", Toast.LENGTH_LONG).show();
         } else if (amount < 10000) {
             state = 7;
             Toast.makeText(getApplicationContext(), "stop, your plant will drown!", Toast.LENGTH_LONG).show();

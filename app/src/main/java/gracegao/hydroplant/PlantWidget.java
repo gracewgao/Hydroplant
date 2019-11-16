@@ -20,6 +20,7 @@ public class PlantWidget extends AppWidgetProvider {
     private int water;
     private static final String ACTION_CLICK_MINUS = "ACTION_CLICK_MINUS";
     private static final String ACTION_CLICK_PLUS = "ACTION_CLICK_PLUS";
+    private static final String ACTION_CLICK_POT = "ACTION_CLICK_POT";
 
     @Override
     public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -54,6 +55,9 @@ public class PlantWidget extends AppWidgetProvider {
                 water = 9999;
             }
         }
+        if (ACTION_CLICK_POT.equals(intent.getAction())) {
+            new MainActivity();
+        }
         changeWater(context, water);
     }
 
@@ -80,6 +84,11 @@ public class PlantWidget extends AppWidgetProvider {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.plant_widget);
         remoteViews.setOnClickPendingIntent(R.id.minusWidget, getPendingSelfIntent(context, ACTION_CLICK_MINUS));
         remoteViews.setOnClickPendingIntent(R.id.plusWidget, getPendingSelfIntent(context, ACTION_CLICK_PLUS));
+
+        Intent i = new Intent(context, MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(context, 0, i, 0);
+        remoteViews.setOnClickPendingIntent(R.id.potWidget, pi);
+
         remoteViews.setTextViewText(R.id.waterLabelWidget, Integer.toString(water));
 
         int state = 5;
@@ -103,7 +112,7 @@ public class PlantWidget extends AppWidgetProvider {
             Toast.makeText(context, "your plant is healthy & happy", Toast.LENGTH_LONG).show();
         } else if (water < 7000) {
             state = 6;
-            Toast.makeText(context, "be careful not to over water!", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "be careful not to overwater!", Toast.LENGTH_LONG).show();
         } else if (water < 10000) {
             state = 7;
             Toast.makeText(context, "stop, your plant will drown!", Toast.LENGTH_LONG).show();
