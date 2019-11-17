@@ -58,13 +58,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/descriptionTextWidget"
+        android:layout_above="@+id/goalLabelWidget"
         android:includeFontPadding="false"
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/descriptionTextWidget"
-        android:text="mL today"
+        android:id="@+id/goalLabelWidget"
+        android:text="/ 3000 mL"
         android:textColor="#715432"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -2,12 +2,15 @@ package gracegao.hydroplant;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,6 +21,11 @@ import android.widget.TextView;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+
+import uk.co.deanwild.materialshowcaseview.IShowcaseListener;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 // This class is an Activity for playing the video game
 public class GameActivity extends AppCompatActivity {
@@ -46,7 +54,7 @@ public class GameActivity extends AppCompatActivity {
     private boolean touch_left = false;
     private boolean isHeart = false;
     private int score, highScore, timeCount, health=2;
-    float acidSpeed, rainSpeed, plantSpeed, heartSpeed, acceleration;
+    float acidSpeed, rainSpeed, plantSpeed, heartSpeed, acceleration, friction;
 
     // Other variables
     private Timer timer;
@@ -172,7 +180,7 @@ public class GameActivity extends AppCompatActivity {
         float rainCenterX = rainX + rain.getWidth() / 2;
         float rainCenterY = rainY + rain.getHeight() / 2;
         // If raindrop falls onto plant
-        if (hitCheck(rainCenterX, rainCenterY)) {
+        if (hitCheck(rainCenterX, rainCenterY, rain.getWidth(), rain.getHeight())) {
             // Moves element out of frame (disappears off the screen)
             rainY = frameHeight + 100;
             // Adds 1 to the current score
@@ -205,7 +213,7 @@ public class GameActivity extends AppCompatActivity {
             float heartCenterX = heartX + heart.getWidth() / 2;
             float heartCenterY = heartY + heart.getHeight() / 2;
             // If heart falls onto plant
-            if (hitCheck(heartCenterX, heartCenterY)) {
+            if (hitCheck(heartCenterX, heartCenterY, heart.getWidth(), heart.getHeight())) {
                 // Moves heart out of frame (disappears off the screen)
                 heartY = frameHeight + 100;
                 // Adds to the score
@@ -232,7 +240,7 @@ public class GameActivity extends AppCompatActivity {
         float acidCenterX = acidX + acid.getWidth() / 2;
         float acidCenterY = acidY + acid.getHeight() / 2;
         // If the plant is hit by acid rain
-        if (hitCheck(acidCenterX, acidCenterY)) {
+        if (hitCheck(acidCenterX, acidCenterY, acid.getWidth(), acid.getHeight())) {
             acidY = frameHeight + 100;
             // Plays a sound
             soundPlayer.playAcidSound();
@@ -277,10 +285,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // Method to check if an object collides with the plant
-    private boolean hitCheck(float x, float y) {
+    private boolean hitCheck(float x, float y, float width, float height) {
         // Checks if x-coordinates and y-coordinates overlap with plant coordinates
-        boolean xHit = plantX <= x && x <= plantX + plantWidth;
-        boolean yHit = plantY <= y && y <= frameHeight;
+        float xLeft = x-(width/2);
+        float xRight = x+(width/2);
+        float yBottom = y+(height/2);
+        boolean xHit = (plantX <= xLeft && xLeft <= plantX + plantWidth) || (plantX + plantWidth >= xRight && xRight >= plantX);
+        boolean yHit = plantY <= y && yBottom <= frameHeight;
         // Return true if there is both an x and y overlap
         if (xHit && yHit)
             return true;
@@ -306,6 +317,7 @@ public class GameActivity extends AppCompatActivity {
 
         // Hides game components
         gameFrame.setVisibility(View.INVISIBLE);
+        pauseLayout.setVisibility(View.INVISIBLE);
         pauseButton.hide();
         // Changes background and title text
         bgImage.setImageDrawable(plantBg);
@@ -347,10 +359,44 @@ public class GameActivity extends AppCompatActivity {
         return true;
     }
 
+    private void gameTutorial(){
+        int green = Color.argb(255,49, 113, 48);
+        int black = Color.argb(255, 0, 0, 0);
+        int white = Color.argb(240, 255, 255, 255);
+
+        MaterialShowcaseView gameView = new MaterialShowcaseView.Builder(this)
+                .setTarget(plant)
+                .setTitleText(Html.fromHtml("<b>how to play</b>"))
+                .setContentText(Html.fromHtml("<p>Tap and hold the left/right side of the screen to move in that direction.</p><p>Earn points by collecting raindrops (+1) and hearts (+3).</p>" +
+                        "<p>Avoid acid rain, catching two consecutive drops will end the game.</p><p> Catching a heart will restore your plant's health.</p><p>Tap anywhere to start!</p>"))
+                .setListener(new IShowcaseListener() {
+                         @Override
+                         public void onShowcaseDisplayed(MaterialShowcaseView showcaseView) {
+                             // Sets x-coordinate of plant
+                             plant.setX(plantX);
+                         }
+                         @Override
+                         public void onShowcaseDismissed(MaterialShowcaseView showcaseView) {
+                             // Sets the game status to running
+                             started = true;
+                         }
+                     }
+                )
+                .setMaskColour(white)
+                .setContentTextColor(black)
+                .setTitleTextColor(green)
+                .setDismissTextColor(green)
+                .setShapePadding(100)
+                .setDismissOnTouch(true)
+                .build();
+        gameView.setPadding(84,84, 84, 84);
+        gameView.show(this);
+    }
+
     // Method to start a new game
     public void startGame(View view) {
-        // Sets the game status to running
         started = true;
+
         // Removes other layout
         startLayout.setVisibility(View.GONE);
         // Changes background image
@@ -404,6 +450,11 @@ public class GameActivity extends AppCompatActivity {
         timeCount = 0;
         score = 0;
         scoreLabel.setText("0");
+
+        if (highScore==0){
+            started=false;
+            gameTutorial();
+        }
 
         // Sets timer to run the game, updates state every 20 milliseconds
         timer = new Timer();

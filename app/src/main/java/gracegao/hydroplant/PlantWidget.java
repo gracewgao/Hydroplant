@@ -17,7 +17,7 @@ import android.widget.Toast;
 public class PlantWidget extends AppWidgetProvider {
 
     private SharedPreferences settings;
-    private int water;
+    private int water, goal;
     private static final String ACTION_CLICK_MINUS = "ACTION_CLICK_MINUS";
     private static final String ACTION_CLICK_PLUS = "ACTION_CLICK_PLUS";
     private static final String ACTION_CLICK_POT = "ACTION_CLICK_POT";
@@ -28,7 +28,7 @@ public class PlantWidget extends AppWidgetProvider {
         settings = context.getSharedPreferences("HYDROPLANT", Context.MODE_PRIVATE);
         SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                if (key.equals("WATER")){
+                if (key.equals("WATER")||key.equals("GOAL")){
                     updateWidget(context, appWidgetManager, plantWidget);
                 }
             }
@@ -55,9 +55,6 @@ public class PlantWidget extends AppWidgetProvider {
                 water = 9999;
             }
         }
-        if (ACTION_CLICK_POT.equals(intent.getAction())) {
-            new MainActivity();
-        }
         changeWater(context, water);
     }
 
@@ -81,6 +78,7 @@ public class PlantWidget extends AppWidgetProvider {
     {
         settings = context.getSharedPreferences("HYDROPLANT", Context.MODE_PRIVATE);
         water = settings.getInt("WATER", 0);
+        goal = settings.getInt("GOAL", 3000);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.plant_widget);
         remoteViews.setOnClickPendingIntent(R.id.minusWidget, getPendingSelfIntent(context, ACTION_CLICK_MINUS));
         remoteViews.setOnClickPendingIntent(R.id.plusWidget, getPendingSelfIntent(context, ACTION_CLICK_PLUS));
@@ -90,27 +88,29 @@ public class PlantWidget extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.potWidget, pi);
 
         remoteViews.setTextViewText(R.id.waterLabelWidget, Integer.toString(water));
+        String goalLabel = "/ " + goal + " mL";
+        remoteViews.setTextViewText(R.id.goalLabelWidget, goalLabel);
 
         int state = 5;
         // Gives feedback on water consumption
-        if (water < 500) {
+        if (water < (float)goal/4) {
             state = 1;
             if (water!=0){
                 Toast.makeText(context, "you need more water!", Toast.LENGTH_LONG).show();
             }
-        } else if (water < 1000) {
+        } else if (water < (float)goal/2) {
             state = 2;
             Toast.makeText(context, "keep it up!", Toast.LENGTH_LONG).show();
-        } else if (water < 1500){
+        } else if (water < (float)goal*3/4){
             state = 3;
             Toast.makeText(context, "keep going!", Toast.LENGTH_LONG).show();
-        } else if (water < 2000){
+        } else if (water < goal){
             state = 4;
             Toast.makeText(context, "almost there!", Toast.LENGTH_LONG).show();
-        } else if (water < 4000) {
+        } else if (water < goal+((float)(10000-goal)/2)) {
             state = 5;
-            Toast.makeText(context, "your plant is healthy & happy", Toast.LENGTH_LONG).show();
-        } else if (water < 7000) {
+            Toast.makeText(context, "your plant is hydrated & happy", Toast.LENGTH_LONG).show();
+        } else if ((water < goal+((float)(10000-goal)*3/4))) {
             state = 6;
             Toast.makeText(context, "be careful not to overwater!", Toast.LENGTH_LONG).show();
         } else if (water < 10000) {

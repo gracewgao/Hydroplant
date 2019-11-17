@@ -43,6 +43,7 @@
 
         <android.support.design.widget.FloatingActionButton
             style="@style/ButtonTheme"
+            android:id="@+id/gameButton"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:backgroundTint="@android:color/white"
@@ -92,7 +93,6 @@
         <!--Puddle image that becomes visible when the user over waters-->
         <TextView
             android:id="@+id/plantName"
-            android:text="hydroplant"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:fontFamily="sans-serif-smallcaps"
@@ -130,8 +130,8 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="96dp"
-            android:textSize="24sp"
-            android:text="mL of water" />
+            android:text="/ your daily goal"
+            android:textSize="24sp" />
 
     </RelativeLayout>
 </FrameLayout>
