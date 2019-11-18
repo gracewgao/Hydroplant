@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText editWater;
     private TextView plantTv, goalTv;
     private ImageView plantImage, puddleImage, cloud1, cloud2, cloud3, skyBg;
-    private FloatingActionButton more, less, gameButton;
+    private FloatingActionButton more, less, gameButton, helpButton;
 
     private int water, state, goal;
     private String name;
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         more = findViewById(R.id.moreButton);
         less = findViewById(R.id.lessButton);
         gameButton = findViewById(R.id.gameButton);
+        helpButton = findViewById(R.id.helpButton);
 
         // Sets timer to move clouds in the background
         timer = new Timer();
@@ -154,7 +155,13 @@ public class MainActivity extends AppCompatActivity {
                 changeGoal();
             }
         });
-
+        // Can change goal when clicked
+        helpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tutorial();
+            }
+        });
         // If the done button on the keyboard is pressed when user enters number
         editWater.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -297,10 +304,9 @@ public class MainActivity extends AppCompatActivity {
         int green = Color.argb(255,49, 113, 48);
         int black = Color.argb(255, 0, 0, 0);
         int white = Color.argb(240, 255, 255, 255);
-        Typeface dismiss = Typeface.create("sans-serif-smallcaps", Typeface.NORMAL);
 
         ShowcaseConfig config = new ShowcaseConfig();
-        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this);
         sequence.setConfig(config);
 
         MaterialShowcaseView nameView = new MaterialShowcaseView.Builder(this)
@@ -344,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMaskColour(white)
                 .setContentTextColor(black)
                 .setTitleTextColor(green)
-                .setShapePadding(100)
+                .setShapePadding(150)
                 .setDismissOnTouch(true)
                 .build();
         MaterialShowcaseView editView = new MaterialShowcaseView.Builder(this)
@@ -354,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
                 .setMaskColour(white)
                 .setContentTextColor(black)
                 .setTitleTextColor(green)
-                .setShapePadding(100)
+                .setShapePadding(150)
                 .setDismissOnTouch(true)
                 .build();
         MaterialShowcaseView moreView = new MaterialShowcaseView.Builder(this)
@@ -372,6 +378,16 @@ public class MainActivity extends AppCompatActivity {
                 .setTarget(gameButton)
                 .setTitleText("Fun times ahead")
                 .setContentText("Enjoy quality bonding time with your plant by playing games together!")
+                .setMaskColour(white)
+                .setContentTextColor(black)
+                .setTitleTextColor(green)
+                .setShapePadding(100)
+                .setDismissOnTouch(true)
+                .build();
+        MaterialShowcaseView helpView = new MaterialShowcaseView.Builder(this)
+                .setTarget(helpButton)
+                .setTitleText("Replay tutorial")
+                .setContentText("Tap here anytime to retake this tour")
                 .setMaskColour(white)
                 .setContentTextColor(black)
                 .setTitleTextColor(green)
@@ -405,6 +421,7 @@ public class MainActivity extends AppCompatActivity {
         moreView.setPadding(84,0, 200, 84);
         sequence.addSequenceItem(moreView);
         sequence.addSequenceItem(styleView(gameView));
+        sequence.addSequenceItem(styleView(helpView));
         sequence.addSequenceItem(styleView(endView));
 
         sequence.start();

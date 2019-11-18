@@ -3,11 +3,11 @@ package gracegao.hydroplant;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,15 +17,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import uk.co.deanwild.materialshowcaseview.IShowcaseListener;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 // This class is an Activity for playing the video game
 public class GameActivity extends AppCompatActivity {
@@ -54,7 +53,7 @@ public class GameActivity extends AppCompatActivity {
     private boolean touch_left = false;
     private boolean isHeart = false;
     private int score, highScore, timeCount, health=2;
-    float acidSpeed, rainSpeed, plantSpeed, heartSpeed, acceleration, friction;
+    float acidSpeed, rainSpeed, plantAcceleration, plantVelocity, heartSpeed, acceleRate, maxPlantSpeed, gravity, initialRain, initialHeart, initialAcid;
 
     // Other variables
     private Timer timer;
@@ -64,6 +63,7 @@ public class GameActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     // For phone storage
     private SharedPreferences settings;
+
 
     // When the Activity is created (similar to the main method)
     @Override
@@ -166,12 +166,15 @@ public class GameActivity extends AppCompatActivity {
         // ACCELERATION
         // Speed of moving elements gradually gets faster to make the game harder
         // Sets a maximum speed for the game based on the acid's speed
-        if (acidSpeed < 60) {
-            acidSpeed += 0.005;
-            rainSpeed += 0.004;
-            heartSpeed += 0.003;
-            plantSpeed += 0.003;
+        if (initialAcid < 40) {
+            initialRain += 0.01;
+            initialHeart += 0.01;
+            initialAcid += 0.01;
+            maxPlantSpeed += 0.01;
         }
+        acidSpeed += gravity;
+        heartSpeed += gravity;
+        rainSpeed += gravity;
 
         // RAINDROPS
         // Moves down vertically
@@ -189,6 +192,7 @@ public class GameActivity extends AppCompatActivity {
         }
         // Creates a new raindrop after the previous raindrop has fallen past the frame
         if (rainY > frameHeight) {
+            rainSpeed = initialRain;
             rainY = -100;
             rainX = (float) Math.floor(Math.random() * (frameWidth - rain.getWidth()));
         }
@@ -201,6 +205,7 @@ public class GameActivity extends AppCompatActivity {
         if (!isHeart && timeCount % 10000 == 0) {
             // Heart is on screen
             isHeart = true;
+            heartSpeed = initialHeart;
             // Sets initial position of heart
             heartY = -20;
             heartX = (float) Math.floor(Math.random() * (frameWidth - heart.getWidth()));
@@ -257,6 +262,7 @@ public class GameActivity extends AppCompatActivity {
         if (acidY > frameHeight) {
             acidY = -100;
             acidX = (float) Math.floor(Math.random() * (frameWidth - acid.getWidth()));
+            acidSpeed = initialAcid;
         }
         // Changes position of the element
         acid.setX(acidX);
@@ -264,18 +270,27 @@ public class GameActivity extends AppCompatActivity {
 
         // USER INPUT AND GESTURES
         // Moves plant if user if touching the screen
-        if (touch_right) {
+        if (touch_right && !touch_left) {
             // Moves right
-            plantX += plantSpeed;
-        } else if (touch_left){
+            plantAcceleration += acceleRate;
+            plantVelocity = (plantVelocity > maxPlantSpeed ? maxPlantSpeed : plantAcceleration + maxPlantSpeed/6);
+        } else if (touch_left && !touch_right){
             // Moves left
-            plantX -= plantSpeed;
+            plantAcceleration -= acceleRate;
+            plantVelocity = (plantVelocity < -maxPlantSpeed ? -maxPlantSpeed : plantAcceleration - maxPlantSpeed/6);
+        } else {
+            plantVelocity *=0.8;
+            plantAcceleration =0;
         }
+        plantX += plantVelocity;
+
         // Sets min and max x-coordinates if plant hits left or right borders
         if (plantX < 0) {
             plantX = 0;
+            plantVelocity =0;
         } else if (plantX > frameWidth - plantWidth) {
             plantX = frameWidth - plantWidth;
+            plantVelocity =0;
         }
         // Sets x-coordinate of plant
         plant.setX(plantX);
@@ -303,6 +318,8 @@ public class GameActivity extends AppCompatActivity {
     private void gameOver() {
         // Game is no longer running
         started = false;
+        touch_left = false;
+        touch_right = false;
 
         // Stops timer
         timer.cancel();
@@ -340,20 +357,35 @@ public class GameActivity extends AppCompatActivity {
     public boolean onTouchEvent(MotionEvent event) {
         // If the game is running
         if (started) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                // Gets x-coordinate where screen is touched
-                float x = event.getX();
-                if (x>(screen.getWidth()/2)){
-                    // If the left half of the screen is touched
-                    touch_right = true;
-                } else {
-                    // If the right half of the screen is touched
-                    touch_left = true;
+            int action = event.getAction() & MotionEvent.ACTION_MASK;
+            int mActivePointerId = event.getPointerId(event.getActionIndex());
+            int pointerIndex = event.findPointerIndex(mActivePointerId);
+            float x = event.getX(pointerIndex);
+            boolean right = x>(screen.getWidth()/2);
+            boolean left = x<=(screen.getWidth()/2);
+
+            switch (action){
+                case MotionEvent.ACTION_DOWN : {
+                    if (right) touch_right = true;
+                    if (left) touch_left = true;
+                    break;
                 }
-            } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                // If the screen is not being touched
-                touch_left = false;
-                touch_right = false;
+                case MotionEvent.ACTION_POINTER_DOWN : {
+                    if (right) touch_right = true;
+                    if (left) touch_left = true;
+                    break;
+                }
+                case MotionEvent.ACTION_POINTER_UP : {
+                    if (right) touch_right = false;
+                    if (left) touch_left = false;
+                    break;
+                }
+                case MotionEvent.ACTION_UP : {
+                    touch_right = false;
+                    touch_left = false;
+                    break;
+                }
+
             }
         }
         return true;
@@ -395,7 +427,10 @@ public class GameActivity extends AppCompatActivity {
 
     // Method to start a new game
     public void startGame(View view) {
+
         started = true;
+        touch_left = false;
+        touch_right = false;
 
         // Removes other layout
         startLayout.setVisibility(View.GONE);
@@ -417,10 +452,12 @@ public class GameActivity extends AppCompatActivity {
             // Dimensions of plant
             plantHeight = plant.getHeight();
             plantWidth = plant.getWidth();
-            // Sets the plant starting position to center
-            plantX = (float)frameWidth/2 - (float)plantWidth/2;
-            plantY = plant.getY();
+
         }
+
+        // Sets the plant starting position to center
+        plantX = (float)frameWidth/2 - (float)plantWidth/2;
+        plantY = plant.getY();
 
         // Sets random starting positions for the clouds
         cloud1.setX((float)Math.random() * frameWidth);
@@ -443,10 +480,17 @@ public class GameActivity extends AppCompatActivity {
         // Resets game elements
         plant.setImageDrawable(plantAlive);
         health = 2;
-        acidSpeed = 15;
-        rainSpeed = 13;
-        heartSpeed = 20;
-        plantSpeed = 10;
+
+        // initializes physics conditions
+        initialRain = 10;
+        initialHeart = 18;
+        initialAcid = 15;
+        plantAcceleration = 0;
+        plantVelocity = 0;
+        maxPlantSpeed = 15;
+        acceleRate = (float)1;
+        gravity = (float)0.3;
+
         timeCount = 0;
         score = 0;
         scoreLabel.setText("0");

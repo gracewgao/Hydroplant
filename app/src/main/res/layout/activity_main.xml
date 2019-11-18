@@ -52,6 +52,16 @@
             app:borderWidth="0dp"
             app:srcCompat="@drawable/game_ic" />
 
+        <android.support.design.widget.FloatingActionButton
+            style="@style/ButtonTheme"
+            android:id="@+id/helpButton"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/gameButton"
+            android:backgroundTint="@android:color/white"
+            android:tint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:srcCompat="@drawable/ic_help" />
+
         <!--Button for adding water-->
         <android.support.design.widget.FloatingActionButton
             style="@style/ButtonTheme"
