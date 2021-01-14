@@ -10,10 +10,10 @@ Check it out on the [Play Store](https://play.google.com/store/apps/details?id=g
 
 ### Quick Preview
 Here's a glance at how it looks:<br /><br />
-<img src="screenshots/1.png" alt="Onboarding Screenshot" width="100px"/>
-<img src="screenshots/2.png" alt="Home Screenshot" width="100px"/>
-<img src="screenshots/3.png" alt="Game Screenshot" width="100px"/>
-<img src="screenshots/4.png" alt="Widget Screenshot" width="100px"/>
+<img src="screenshots/1.png" alt="Onboarding Screenshot" width="200px"/>
+<img src="screenshots/2.png" alt="Home Screenshot" width="200px"/>
+<img src="screenshots/3.png" alt="Game Screenshot" width="200px"/>
+<img src="screenshots/4.png" alt="Widget Screenshot" width="200px"/>
 
 ### Contributing
 Please feel free report bugs and add any ideas you like!
